@@ -89,26 +89,28 @@ class film :
         display(self.img)
 
 film=film()
-nIm=10
-dx = (640-60-40)/nIm
+nImages=50
+largeurImage =50
+dx = (640-60-40)/nImages
 fichiers=[]
-for i in range(nIm):
+for i in range(nImages):
     x0=60+i*dx
-    x1= x0+50
+    x1= x0+largeurImage
+    dt   = 1 if i%5==0 else 0.2
     name = film.makeImage(x0,x1,showIt=False,saveIt=True)
-    fichiers.append(name)
+    fichiers.append([name,dt])
 
 ################################################
 #                                           MONTAGE                                                              #
 ################################################
 tmpFile = open("liste.txt","w")
+tmpFile.writelines(f"file 'intro.jpg'\n")
+tmpFile.writelines(f"duration 2\n")
 for f in fichiers:
-    tmpFile.writelines(f"file '{f}'\n")
-    tmpFile.writelines(f"duration 0.2\n")
+    tmpFile.writelines(f"file '{f[0]}'\n")
+    tmpFile.writelines(f"duration {f[1]}\n")
 tmpFile.close()
-cmd = 'ffmpeg -f concat -i liste.txt -vf "scale=iw-mod(iw\,2):ih-mod(ih\,2)"  -fps_mode vfr -pix_fmt yuv420p  film.mp4'
-print(cmd)
-subprocess.run(["rm", "-f", "film.mp4"], check=True)
+cmd = 'ffmpeg -f concat -i liste.txt -vf "scale=iw-mod(iw\,2):ih-mod(ih\,2)"  -fps_mode vfr -pix_fmt yuv420p -y film.mp4'
 resultat = subprocess.run(
     cmd,
     shell=True,

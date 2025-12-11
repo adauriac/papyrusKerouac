@@ -89,6 +89,17 @@ class film :
         display(self.img)
 
 film=film()
+if False : # this is frombeginning to end without detour
+    nImages=50
+    largeurImage =50
+    dx = (640-60-40)/nImages
+    fichiers=[]
+    for i in range(nImages):
+        x0=60+i*dx
+        x1= x0+largeurImage
+        dt   = 1 if i%5==0 else 0.2
+        name = film.makeImage(x0,x1,showIt=False,saveIt=True)
+        fichiers.append([name,dt])
 nImages=50
 largeurImage =50
 dx = (640-60-40)/nImages
@@ -96,7 +107,15 @@ fichiers=[]
 for i in range(nImages):
     x0=60+i*dx
     x1= x0+largeurImage
-    dt   = 1 if i%5==0 else 0.2
+    if  i==40:
+        recul = 30
+        for j in range(1):
+            xx0 = x0-recul*dx  + j*(recul/19.)*dx
+            xx1 = xx0+largeurImage
+            name = film.makeImage(xx0,xx1,showIt=False,saveIt=True)
+            dt = 2 if j==0 else 0.2
+            fichiers.append([name,dt])
+    dt   = 1 if i%5==0 else 0.05
     name = film.makeImage(x0,x1,showIt=False,saveIt=True)
     fichiers.append([name,dt])
 

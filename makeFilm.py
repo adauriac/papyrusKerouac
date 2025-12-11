@@ -129,7 +129,8 @@ for f in fichiers:
     tmpFile.writelines(f"duration {f[1]}\n")
     tmpFile.writelines(f"\n")
 tmpFile.close()
-cmd = 'ffmpeg -f concat -i liste.txt -vf "scale=iw-mod(iw\\,2):ih-mod(ih\\,2)"  -fps_mode vfr -pix_fmt yuv420p -y film.mp4'
+#cmd = 'ffmpeg -f concat -i liste.txt -vf "scale=iw-mod(iw\\,2):ih-mod(ih\\,2)"  -fps_mode vfr -pix_fmt yuv420p -y film.mp4'
+cmd = 'ffmpeg -f concat -i liste.txt  -fps_mode vfr -pix_fmt yuv420p -y film.mp4'
 
 resultat = subprocess.run(
     cmd,

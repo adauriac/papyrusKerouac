@@ -42,7 +42,8 @@ class film :
         if saveIt:
             fileName=f"image_{x0}_{x1}.jpg"
             self.img.save(filename=fileName)
-            print(f"{fileName} saved")
+            if False:
+                print(f"{fileName} saved")
             return fileName
         
     def droiteVertical(self,P1,P2,x):
@@ -100,23 +101,21 @@ if False : # this is frombeginning to end without detour
         dt   = 1 if i%5==0 else 0.2
         name = film.makeImage(x0,x1,showIt=False,saveIt=True)
         fichiers.append([name,dt])
-nImages=50
+nImages=70
 largeurImage =50
 dx = (640-60-40)/nImages
 fichiers=[]
-for i in range(nImages):
+pause =35
+up=55
+for i in range(nImages): # a l'imge pause on remonte a l'image up
     x0=60+i*dx
     x1= x0+largeurImage
-    if  i==40:
-        recul = 30
-        for j in range(1):
-            xx0 = x0-recul*dx  + j*(recul/19.)*dx
-            xx1 = xx0+largeurImage
-            name = film.makeImage(xx0,xx1,showIt=False,saveIt=True)
-            dt = 2 if j==0 else 0.2
-            fichiers.append([name,dt])
-    dt   = 1 if i%5==0 else 0.05
+    dt   = 1 if i%5==0 else 0.02
     name = film.makeImage(x0,x1,showIt=False,saveIt=True)
+    if  i==pause:
+        nameRetour=name
+    if  i==up:
+        fichiers.append([nameRetour,3])
     fichiers.append([name,dt])
 
 ################################################
@@ -128,16 +127,18 @@ tmpFile.writelines(f"duration 2\n")
 for f in fichiers:
     tmpFile.writelines(f"file '{f[0]}'\n")
     tmpFile.writelines(f"duration {f[1]}\n")
+    tmpFile.writelines(f"\n")
 tmpFile.close()
-cmd = 'ffmpeg -f concat -i liste.txt -vf "scale=iw-mod(iw\,2):ih-mod(ih\,2)"  -fps_mode vfr -pix_fmt yuv420p -y film.mp4'
+cmd = 'ffmpeg -f concat -i liste.txt -vf "scale=iw-mod(iw\\,2):ih-mod(ih\\,2)"  -fps_mode vfr -pix_fmt yuv420p -y film.mp4'
+
 resultat = subprocess.run(
     cmd,
     shell=True,
     capture_output=True,    # récupère stdout et stderr
     text=True                       # renvoie des chaînes plutôt que des bytes
 )
-print(resultat.stdout)
-print(resultat.stderr)
+print("OUT\n",resultat.stdout)
+print("ERR\n",resultat.stderr)
 
 subprocess.run(["mplayer","film.mp4"])
    

@@ -90,6 +90,21 @@ class film :
         display(self.img)
 
 film=film()
+import sys
+if len(sys.argv)>1:
+    fileName = sys.argv[1]
+    cmd = 'ffmpeg -f concat -i %s  -fps_mode vfr -pix_fmt yuv420p -y film.mp4'%fileName
+    resultat = subprocess.run(
+        cmd,
+        shell=True,
+        capture_output=True,    # récupère stdout et stderr
+        text=True                       # renvoie des chaînes plutôt que des bytes
+    )
+    print("OUT\n",resultat.stdout)
+    print("ERR\n",resultat.stderr)
+    subprocess.run(["mplayer","film.mp4"])
+    sys.exit(1)
+
 if False : # this is frombeginning to end without detour
     nImages=50
     largeurImage =50
@@ -105,7 +120,7 @@ nImages=70
 largeurImage =50
 dx = (640-60-40)/nImages
 fichiers=[]
-pause =35
+pause =5
 up=55
 for i in range(nImages): # a l'imge pause on remonte a l'image up
     x0=60+i*dx
@@ -115,7 +130,8 @@ for i in range(nImages): # a l'imge pause on remonte a l'image up
     if  i==pause:
         nameRetour=name
     if  i==up:
-        fichiers.append([nameRetour,3])
+        fichiers.append(["intro.jpg",3])
+        # fichiers.append([nameRetour,3])
     fichiers.append([name,dt])
 
 ################################################
@@ -123,15 +139,13 @@ for i in range(nImages): # a l'imge pause on remonte a l'image up
 ################################################
 tmpFile = open("liste.txt","w")
 tmpFile.writelines(f"file 'intro.jpg'\n")
-tmpFile.writelines(f"duration 2\n")
+tmpFile.writelines(f"duration 2\n\n")
 for f in fichiers:
     tmpFile.writelines(f"file '{f[0]}'\n")
-    tmpFile.writelines(f"duration {f[1]}\n")
-    tmpFile.writelines(f"\n")
+    tmpFile.writelines(f"duration {f[1]}\n\n")
 tmpFile.close()
 #cmd = 'ffmpeg -f concat -i liste.txt -vf "scale=iw-mod(iw\\,2):ih-mod(ih\\,2)"  -fps_mode vfr -pix_fmt yuv420p -y film.mp4'
 cmd = 'ffmpeg -f concat -i liste.txt  -fps_mode vfr -pix_fmt yuv420p -y film.mp4'
-
 resultat = subprocess.run(
     cmd,
     shell=True,

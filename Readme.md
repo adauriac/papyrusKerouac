@@ -1,8 +1,5 @@
 L'image vient du réseau.
-Pour dessiner j'ai essayer GIMP sans  succès. 
-	Il y a des _scripts_-- et des _plugins_ en différents langages, dont python.
-	Les scripts sont censés être plus simples.
-Avec image-magick c'est beaucoup plus simple: deux méthodes:
-1. utiliser des commandes construites en python: magick in.jpg -stroke red -strokewidth 5 -fill none -draw "rectangle 100,100 500,400" out.jpg voir go.py
-2. utiliser l'api python de imagemagick qui est wand voir gowand.py
+makeFilm.py : on utilise wand pour créer les images et ffmpeg pour les monter.
 
+utiliser wand.py l'api python de imagemagick qui crée les fichiers ordonnés des images
+utiliser ffmpeg avec un fichier qui contient une ligne file'nom' suivie d'une ligne duration x

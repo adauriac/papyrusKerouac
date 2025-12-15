@@ -6,7 +6,8 @@ from wand.display import display
 import subprocess
 
 class film :
-    pts = [(60,190), (640,114), (640,334), (60,280)]
+    # pts = [(60,190), (640,114), (640,334), (60,280)] horizontal
+    pts = [(180,60), (310,60), (433,980), (86,980)]
     
     def __init__(self,backgroundImageFile="papyrusKerouac.jpg"):
         self.fileName=backgroundImageFile
@@ -54,7 +55,29 @@ class film :
         x1=P2[0];y1=P2[1]
         return (y1-y0)/(x1-x0)*(x-x0)+y0
 
+    def droiteHorizontal(self,P1,P2,y):
+        """
+        retourne ordonnée de l'intersection droite passant par P1 et P2 (2-uples) et // à Ox
+        """
+        x0=P1[0];y0=P1[1]
+        x1=P2[0];y1=P2[1]
+        return (x1-x0)/(y1-y0)*(y-y0)+x0
+
     def rectangle(self,a,b):
+        """
+        retourne le trapèze dont les verticales ont pour abscisse X1 et X2
+        """
+        x0 = a
+        y0 = self.droiteHorizontal(self.pts[0],self.pts[1],x0)
+        x1 = b
+        y1 = self.droiteHorizontal(self.pts[0],self.pts[1],x1)
+        x2 = b
+        y2 = self.droiteHorizontal(self.pts[2],self.pts[3],x2)
+        x3 = a
+        y3 = self.droiteHorizontal(self.pts[2],self.pts[3],x3)
+        return [(x0,y0),(x1,y1),(x2,y2),(x3,y3)]
+
+    def rectangleHorizontal(self,a,b):
         """
         retourne le trapèze dont les verticales ont pour abscisse X1 et X2
         """

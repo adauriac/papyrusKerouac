@@ -12,4 +12,6 @@ manuscripte "Patrick Hand Regular"
 
 Pour avoir des dimensions paires: magick input.jpg -resize 798x430! output.jpg (initialement 799x430)
 
-pour retourner: ffmpeg -i film.mp4 -vf "transpose=1" -c:v libx264 -c:a copy output.mp4
+Pour retourner le film : ffmpeg -i film.mp4 -vf "transpose=1" -c:v libx264 -c:a copy output.mp4
+
+Pour retourner l'iamge d'intro: magick introVerticaleTournee.jpg -rotate 90 introVerticale.jpg

@@ -5,13 +5,21 @@ from wand.color import Color
 from wand.display import display
 import subprocess
 
+# needs two jpeg files:
+#  1) papyrusKerouac.jpg which comes from 
+#     https://www.vogue.fr/culture/a-voir/diaporama/on-the-road-le-manuscrit-original-de-kerouac-en-rsidence-paris/9034
+#     and has been resized as : magick input.jpg -resize 798x430! output.jpg (initialement 799x430)
+#  2) introVerticale.jpg (see Readme.md to know how to make it)
+
+# creates both filmVertical.mp4 and filmHorizontal.mp4 end displays  filmVertical.mp4
+
+# below the parmeters for animation 
 dureeLongue=1
-dureeCourte=0.1
-dureeRetour = 2
+dureeCourte=0.05
+dureeRetour = 2.5
 nImages=70
 largeurImage =50
 dx = (640-60-40)/nImages
-fichiers=[]
 pause =5
 up=25
 
@@ -103,7 +111,7 @@ film=film()
 import sys
 if len(sys.argv)>1:
     fileName = sys.argv[1]
-    cmd = 'ffmpeg -f concat -i %s  -fps_mode vfr -pix_fmt yuv420p -y film.mp4'%fileName
+    cmd = 'ffmpeg -f concat -i %s         -fps_mode vfr -pix_fmt yuv420p -y filmHorizontal.mp4'%fileName
     resultat = subprocess.run(
         cmd,
         shell=True,
@@ -112,9 +120,21 @@ if len(sys.argv)>1:
     )
     print("OUT\n",resultat.stdout)
     print("ERR\n",resultat.stderr)
-    subprocess.run(["mplayer","film.mp4"])
+
+    cmd = 'ffmpeg -i filmHorizontal.mp4 -vf "transpose=1" -c:v libx264 -c:a copy -y filmVertical.mp4'
+    resultat = subprocess.run(
+        cmd,
+        shell=True,
+        capture_output=True,    # récupère stdout et stderr
+        text=True                       # renvoie des chaînes plutôt que des bytes
+    )
+    print("OUT\n",resultat.stdout)
+    print("ERR\n",resultat.stderr)
+
+    subprocess.run(["mplayer","filmVertical.mp4"])
     sys.exit(1)
 
+fichiers=[]
 for i in range(nImages): # a l'imge pause on remonte a l'image up
     x0=60+i*dx
     x1= x0+largeurImage
@@ -132,14 +152,15 @@ for i in range(nImages): # a l'imge pause on remonte a l'image up
 #                                           MONTAGE                                                              #
 ################################################
 tmpFile = open("liste.txt","w")
-tmpFile.writelines(f"file 'intro.jpg'\n")
+tmpFile.writelines(f"file 'introVerticale.jpg'\n")
 tmpFile.writelines(f"duration 2\n\n")
 for f in fichiers:
     tmpFile.writelines(f"file '{f[0]}'\n")
     tmpFile.writelines(f"duration {f[1]}\n\n")
 tmpFile.close()
-#cmd = 'ffmpeg -f concat -i liste.txt -vf "scale=iw-mod(iw\\,2):ih-mod(ih\\,2)"  -fps_mode vfr -pix_fmt yuv420p -y film.mp4'
-cmd = 'ffmpeg -f concat -i liste.txt  -fps_mode vfr -pix_fmt yuv420p -y film.mp4'
+#cmd = 'ffmpeg -f concat -i liste.txt -vf "scale=iw-mod(iw\\,2):ih-mod(ih\\,2)"  -fps_mode vfr -pix_fmt yuv420p -y filmHorizontal.mp4'
+cmd = 'ffmpeg -f concat -i liste.txt  -fps_mode vfr -pix_fmt yuv420p -y filmHorizontal.mp4'
+# cmd = 'ffmpeg -f concat -safe=0 -i liste.txt -r 100 -fps_mode vfr- c:v libx264  -pix_fmt yuv420p -y filmHorizontal..mp4'
 resultat = subprocess.run(
     cmd,
     shell=True,
@@ -149,5 +170,15 @@ resultat = subprocess.run(
 print("OUT\n",resultat.stdout)
 print("ERR\n",resultat.stderr)
 
-subprocess.run(["mplayer","film.mp4"])
+cmd = 'ffmpeg -i filmHorizontal.mp4 -vf "transpose=1" -c:v libx264 -c:a copy -y filmVertical.mp4'
+resultat = subprocess.run(
+    cmd,
+    shell=True,
+    capture_output=True,    # récupère stdout et stderr
+    text=True                       # renvoie des chaînes plutôt que des bytes
+)
+print("OUT\n",resultat.stdout)
+print("ERR\n",resultat.stderr)
+
+subprocess.run(["mplayer","filmVertical.mp4"])
    

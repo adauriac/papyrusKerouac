@@ -7,3 +7,5 @@ utiliser wand.py l'api python de imagemagick qui crée les fichiers ordonnés de
 utiliser ffmpeg avec un fichier qui contient une ligne file'nom' suivie d'une ligne duration x
 
 Pour faire l'intro ouvrir une image avec gimp y ajouter un calque blanc(donc bonne dim) et avec text entrer le texte avec la police manuscripte
+
+Pour avoir des dimensions paires: magick input.jpg -resize 798x430! output.jpg (initialement 799x430)

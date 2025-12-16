@@ -5,6 +5,16 @@ from wand.color import Color
 from wand.display import display
 import subprocess
 
+dureeLongue=1
+dureeCourte=0.1
+dureeRetour = 2
+nImages=70
+largeurImage =50
+dx = (640-60-40)/nImages
+fichiers=[]
+pause =5
+up=55
+
 class film :
     pts = [(60,190), (640,114), (640,334), (60,280)]
     
@@ -105,32 +115,15 @@ if len(sys.argv)>1:
     subprocess.run(["mplayer","film.mp4"])
     sys.exit(1)
 
-if False : # this is frombeginning to end without detour
-    nImages=50
-    largeurImage =50
-    dx = (640-60-40)/nImages
-    fichiers=[]
-    for i in range(nImages):
-        x0=60+i*dx
-        x1= x0+largeurImage
-        dt   = 1 if i%5==0 else 0.2
-        name = film.makeImage(x0,x1,showIt=False,saveIt=True)
-        fichiers.append([name,dt])
-nImages=70
-largeurImage =50
-dx = (640-60-40)/nImages
-fichiers=[]
-pause =5
-up=55
 for i in range(nImages): # a l'imge pause on remonte a l'image up
     x0=60+i*dx
     x1= x0+largeurImage
-    dt   = 1 if i%5==0 else 0.02
+    dt   = dureeLongue if i%5==0 else dureeCourte
     name = film.makeImage(x0,x1,showIt=False,saveIt=True)
     if  i==pause:
         nameRetour=name
     if  i==up:
-        fichiers.append(["intro.jpg",3])
+        fichiers.append(["intro.jpg",dureeRetour])
         # fichiers.append([nameRetour,3])
     fichiers.append([name,dt])
 

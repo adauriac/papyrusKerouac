@@ -13,7 +13,7 @@ largeurImage =50
 dx = (640-60-40)/nImages
 fichiers=[]
 pause =5
-up=55
+up=25
 
 class film :
     pts = [(60,190), (640,114), (640,334), (60,280)]
@@ -123,8 +123,9 @@ for i in range(nImages): # a l'imge pause on remonte a l'image up
     if  i==pause:
         nameRetour=name
     if  i==up:
-        fichiers.append(["intro.jpg",dureeRetour])
-        # fichiers.append([nameRetour,3])
+        # fichiers.append(["intro.jpg",dureeRetour])
+        fichiers.append([nameRetour,dureeRetour])
+        continue
     fichiers.append([name,dt])
 
 ################################################
